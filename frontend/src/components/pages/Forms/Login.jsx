@@ -22,7 +22,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const resposta = await fetch("http://127.0.0.1:5000/UserBP/login", {
+      const resposta = await fetch("http://127.0.0.1:5000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json; charset=UTF-8",
@@ -42,9 +42,8 @@ function Login() {
       if (dados.success) {
         alert("Login realizado com sucesso!");
         setMensagem("");
-        // Aqui você pode redirecionar, por exemplo:
-        // Link to("/perfil");
         setInfoForm({ email: '', senha: '' });
+        // Aqui você pode redirecionar o usuário ou atualizar o estado da aplicação
       } else {
         setMensagem(dados.message || "Credenciais inválidas.");
       }

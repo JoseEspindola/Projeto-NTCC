@@ -1,7 +1,10 @@
 import '../../tudo.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from "react";
+
 function Cadastro() {
+  const navigate = useNavigate();
+
   const [infoForm, setInfoForm] = useState({
     nome: '',
     email: '',
@@ -16,19 +19,18 @@ function Cadastro() {
       [name]: value
     }));
   };
-    const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const resposta = await fetch("http://127.0.0.1:5000/UserBP/cadastro", {
+      const resposta = await fetch("http://127.0.0.1:5000/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name : infoForm.nome,
+          nome: infoForm.nome, 
           email: infoForm.email,
-          senha: infoForm.senha,
+          senha: infoForm.senha
         }),
       });
 
@@ -41,9 +43,8 @@ function Cadastro() {
       if (dados.success) {
         alert("Cadastro realizado com sucesso!");
         setMensagem("");
-        // Aqui você pode redirecionar, por exemplo:
-        // Link to("/login");
-        setInfoForm({nome:'', email: '', senha: '' });
+        setInfoForm({ nome: '', email: '', senha: '' });
+        navigate('/login');
       } else {
         setMensagem(dados.message || "Credenciais inválidas.");
       }
@@ -53,15 +54,23 @@ function Cadastro() {
       setMensagem("Erro ao realizar cadastro. Tente novamente.");
     }
   };
+
   return (
     <div className="body">
+      {mensagem && <p className="erro">{mensagem}</p>}
       <h1 className="form-title">Cadastro</h1>
 
-      <form onChange={handleSubmit} method = "POST">
+      <form onSubmit={handleSubmit} method="POST">
         <label htmlFor="nome">Nome Completo</label>
-        <input type="text" name="nome" id="nome" 
-        placeholder="ex: Mariana Perez" required
-        value={infoForm.nome} onChange={handleChange}/>
+        <input
+          type="text"
+          name="nome"
+          id="nome"
+          placeholder="ex: Mariana Perez"
+          required
+          value={infoForm.nome}
+          onChange={handleChange}
+        />
 
         <label htmlFor="email">E-mail</label>
         <input
@@ -91,7 +100,6 @@ function Cadastro() {
           Já possui login? <Link to="/login">Clique aqui</Link> para entrar.
         </div>
       </form>
-      {mensagem && <p className="erro">{mensagem}</p>}
     </div>
   );
 }
