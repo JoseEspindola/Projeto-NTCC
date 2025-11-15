@@ -1,48 +1,62 @@
 import '../../tudo.css';
+import React from 'react';
+
 function Masc() {
+  // Lista de produtos estáticos
+  const produtos = [
+    {
+      id: 1,
+      nome: "Camisa Social Slim",
+      quantidade: 5,
+      descricao: "Tamanho M - Azul Marinho",
+      preco: 60.0,
+      imagem: "css/img/slim.jpg",
+      badge: "Promo"
+    }
+  ];
+
+  // Função para enviar um único produto ao backend Flask
+ const adicionarAoCarrinho = async (produto) => {
+  try {
+    const response = await fetch(`http://localhost:5000/carrinho/adicionar/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ produto_id: produto.id })
+    });
+
+    const data = await response.json();
+    console.log("Produto adicionado:", data);
+    alert(`${produto.nome} adicionado ao carrinho!`);
+  } catch (error) {
+    console.error("Erro ao adicionar produto:", error);
+    alert("Erro ao enviar produto.");
+  }
+};
+
+
   return (
-    <div class="body">
-    <h1>Produtos Masculinos em Destaque</h1>
-    <hr/>
+    <div className="body">
+      <h1>Produtos Masculinos em Destaque</h1>
+      <hr />
 
-    <div class="carrinho-container">
-        <div class="carrinho-card">
-            <div class="badge">Promoção</div>
-            <img src="css/img/slim.jpg" alt="Camisa Social"/>
-            <h4>Camisa Social Slim</h4>
-            <p>Tamanho M - Azul Marinho</p>
-            <p class="preco">R$ 60,00</p>
-            <button>Adicionar ao Carrinho</button>
-        </div>
-
-        <div class="carrinho-card">
-            <div class="badge">Novo</div>
-            <img src="css/img/tenis.jpg" alt="Tênis Esportivo"/>
-            <h4>Tênis Esportivo Casual</h4>
-            <p>Tamanho 42 - Cinza</p>
-            <p class="preco">R$ 84,50</p>
-            <button>Adicionar ao Carrinho</button>
-        </div>
-
-        <div class="carrinho-card">
-            <img src="css/img/jaqueta.jpg" alt="Jaqueta Casual"/>
-            <h4>Jaqueta Casual Masculina</h4>
-            <p>Tamanho G - Preto</p>
-            <p class="preco">R$ 95,00</p>
-            <button>Adicionar ao Carrinho</button>
-        </div>
-
-        <div class="carrinho-card">
-            <div class="badge">Promoção</div>
-            <img src="css/img/mm.avif" alt="Mochila Masculina"/>
-            <h4>Mochila Masculina Esportiva</h4>
-            <p>Capacidade 25L - Azul</p>
-            <p class="preco">R$ 70,00</p>
-            <button>Adicionar ao Carrinho</button>
-        </div>
+      <div className="carrinho-container">
+        {produtos.map((produto) => (
+          <div className="carrinho-card" key={produto.id}>
+            {produto.badge && <div className="badge">{produto.badge}</div>}
+            <img src={produto.imagem} alt={produto.nome} />
+            <h4>{produto.nome}</h4>
+            <h4>{produto.quantidade}</h4>
+            <p>{produto.descricao}</p>
+            <p className="preco">R$ {produto.preco.toFixed(2)}</p>
+            <button onClick={() => adicionarAoCarrinho(produto)}>
+              Adicionar ao Carrinho
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
-</div>
   );
 }
 
-export default Masc;    
+export default Masc;

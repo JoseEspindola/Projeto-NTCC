@@ -37,7 +37,6 @@ def login():
     if not user or user.senha != senha:
         return jsonify({"success": False, "message": "E-mail ou senha incorretos"}), 401
 
-    # salva id do usuário na sessão
     session["user_id"] = user.id
 
     return jsonify({
