@@ -4,15 +4,29 @@ class Carrinho(db.Model):
     __tablename__ = "carrinho"
 
     id = db.Column(db.Integer, primary_key=True)
-    produto_id = db.Column(db.Integer, nullable=False)
-    
 
-    usuario = db.relationship("User", backref="carrinho")
-    usuario_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    produto_id = db.Column(
+        db.Integer,
+        db.ForeignKey("produtos.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    quantidade = db.Column(db.Integer, default=1, nullable=False)
+
+    # Relacionamentos
+    usuario = db.relationship("User", back_populates="carrinho")
+    produto = db.relationship("Produto", back_populates="itens_carrinho")
+
     def to_dict(self):
         return {
             "id": self.id,
+            "usuario_id": self.usuario_id,
             "produto_id": self.produto_id,
-            "usuario_id": self.usuario_id
+            "quantidade": self.quantidade,
         }

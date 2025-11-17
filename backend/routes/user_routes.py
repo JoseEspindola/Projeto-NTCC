@@ -1,9 +1,9 @@
 from dao.userDAO import UserDAO
 from flask import Blueprint, jsonify, request, session
 
-auth_bp = Blueprint("auth", __name__)
+user_bp = Blueprint("user", __name__)
 
-@auth_bp.route("/register", methods=["GET", "POST"])
+@user_bp.route("/register", methods=["GET", "POST"])
 def register():
     data = request.get_json()
     nome = data.get("nome")
@@ -24,7 +24,7 @@ def register():
     }), 201
     
 
-@auth_bp.route("/login", methods=["POST"])
+@user_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
     email = data.get("email")
@@ -38,7 +38,7 @@ def login():
         return jsonify({"success": False, "message": "E-mail ou senha incorretos"}), 401
 
     session["user_id"] = user.id
-
+    print("Sessão criada para user_id:", user.id)
     return jsonify({
         "success": True,
         "message": "Login realizado com sucesso!",

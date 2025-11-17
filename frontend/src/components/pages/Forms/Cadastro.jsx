@@ -24,7 +24,7 @@ function Cadastro() {
     e.preventDefault();
 
     try {
-      const resposta = await fetch("http://127.0.0.1:5000/auth/register", {
+      const resposta = await fetch("http://127.0.0.1:5000/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -34,9 +34,6 @@ function Cadastro() {
         }),
       });
 
-      if (!resposta.ok) {
-        throw new Error(`Erro HTTP: ${resposta.status}`);
-      }
 
       const dados = await resposta.json();
 

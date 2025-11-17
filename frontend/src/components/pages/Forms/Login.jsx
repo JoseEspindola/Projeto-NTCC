@@ -22,7 +22,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const resposta = await fetch("http://127.0.0.1:5000/auth/login", {
+      const resposta = await fetch("http://127.0.0.1:5000/user/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json; charset=UTF-8",
@@ -33,9 +33,6 @@ function Login() {
         }),
       });
 
-      if (!resposta.ok) {
-        throw new Error(`Erro HTTP: ${resposta.status}`);
-      }
 
       const dados = await resposta.json();
 
@@ -43,7 +40,6 @@ function Login() {
         alert("Login realizado com sucesso!");
         setMensagem("");
         setInfoForm({ email: '', senha: '' });
-        // Aqui você pode redirecionar o usuário ou atualizar o estado da aplicação
       } else {
         setMensagem(dados.message || "Credenciais inválidas.");
       }

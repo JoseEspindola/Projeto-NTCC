@@ -1,5 +1,4 @@
 import '../../tudo.css';
-import React from 'react';
 
 function Masc() {
   // Lista de produtos estáticos
@@ -18,16 +17,21 @@ function Masc() {
   // Função para enviar um único produto ao backend Flask
  const adicionarAoCarrinho = async (produto) => {
   try {
-    const response = await fetch(`http://localhost:5000/carrinho/adicionar/`, {
+    const resposta = await fetch(`http://127.0.0.1:5000/carrinho/adicionar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({ produto_id: produto.id })
     });
 
-    const data = await response.json();
-    console.log("Produto adicionado:", data);
-    alert(`${produto.nome} adicionado ao carrinho!`);
+    const dados = await resposta.json();
+
+    if (dados.success) {    
+      alert(`${produto.nome} adicionado ao carrinho!`);
+      setMensagem("");
+    } else {
+      setMensagem(dados.message || "Credenciais inválidas.");
+    }
   } catch (error) {
     console.error("Erro ao adicionar produto:", error);
     alert("Erro ao enviar produto.");

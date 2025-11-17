@@ -7,6 +7,11 @@ class User(db.Model):
     nome = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     senha = db.Column(db.String(200), nullable=False)  # pode receber hash futuramente
+    carrinho = db.relationship(
+        "Carrinho",
+        back_populates="usuario",
+        cascade="all, delete-orphan"
+    )
 
     def to_dict(self):
         return {
