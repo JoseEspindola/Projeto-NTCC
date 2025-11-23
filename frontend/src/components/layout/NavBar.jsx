@@ -1,3 +1,4 @@
+import Logout from '../pages/Forms/Logout';
 import '../tudo.css';
 import { Link } from 'react-router-dom';
 
@@ -32,6 +33,7 @@ function NavBar() {
             />
           </Link>
           <Link to="/login"><button>Login</button></Link>
+          <Logout />
         </div>
       </div>
     </header>

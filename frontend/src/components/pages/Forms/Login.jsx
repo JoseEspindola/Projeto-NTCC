@@ -1,8 +1,11 @@
 import '../../tudo.css';
+import { useCookies } from 'react-cookie';
 import { Link } from 'react-router-dom';
 import { useState } from "react";
 
 function Login() {
+  const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
+
   const [infoForm, setInfoForm] = useState({
     email: '',
     senha: ''
@@ -40,6 +43,7 @@ function Login() {
         alert("Login realizado com sucesso!");
         setMensagem("");
         setInfoForm({ email: '', senha: '' });
+        setCookie('user_id', dados.session_cookie, { path: '/' });
       } else {
         setMensagem(dados.message || "Credenciais inválidas.");
       }
@@ -85,7 +89,6 @@ function Login() {
 
         {mensagem && <p className="erro">{mensagem}</p>}
       </form>
-
       <p>
         Faça login para acessar seu perfil, acompanhar pedidos e apoiar ações solidárias. 
         O acesso é seguro e totalmente gratuito.

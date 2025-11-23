@@ -1,5 +1,6 @@
 import '../../tudo.css';
-
+import { useCookies } from 'react-cookie';
+import { useState } from "react";
 function Masc() {
   // Lista de produtos estáticos
   const produtos = [
@@ -13,20 +14,23 @@ function Masc() {
       badge: "Promo"
     }
   ];
-
+  const [cookies] = useCookies(['user_id']);
+  const [mensagem, setMensagem] = useState('');
   // Função para enviar um único produto ao backend Flask
  const adicionarAoCarrinho = async (produto) => {
   try {
-    const resposta = await fetch(`http://127.0.0.1:5000/carrinho/adicionar`, {
+    const resposta = await fetch("http://127.0.0.1:5000/carrinho/adicionar", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ produto_id: produto.id, cookieLogin: cookies.user_id }),
       credentials: "include",
-      body: JSON.stringify({ produto_id: produto.id })
     });
 
     const dados = await resposta.json();
 
-    if (dados.success) {    
+    if (dados.success) {
       alert(`${produto.nome} adicionado ao carrinho!`);
       setMensagem("");
     } else {
@@ -37,6 +41,7 @@ function Masc() {
     alert("Erro ao enviar produto.");
   }
 };
+
 
 
   return (

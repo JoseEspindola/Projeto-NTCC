@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie'; 
+
 import NavBar from './components/layout/NavBar';
 import Footer from './components/layout/Footer';
 
@@ -16,21 +18,23 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
-      <NavBar /> 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/carrinho" element={<Carrinho />} />
-        <Route path="/feminino" element={<Feminino />} />
-        <Route path="/masculino" element={<Masculino />} />
-        <Route path="/outros" element={<Outros />} />
-        <Route path="/mapa" element={<Mapa />} />
-        <Route path="/quem-somos" element={<QuemSomos />} />
-      </Routes>
-      <Footer />
-    </Router>
+    <CookiesProvider> 
+      <Router>
+        <NavBar /> 
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/carrinho" element={<Carrinho />} />
+          <Route path="/feminino" element={<Feminino />} />
+          <Route path="/masculino" element={<Masculino />} />
+          <Route path="/outros" element={<Outros />} />
+          <Route path="/mapa" element={<Mapa />} />
+          <Route path="/quem-somos" element={<QuemSomos />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </CookiesProvider>
   );
 }
 

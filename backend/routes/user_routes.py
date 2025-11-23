@@ -1,6 +1,6 @@
 from dao.userDAO import UserDAO
 from flask import Blueprint, jsonify, request, session
-
+from itsdangerous import URLSafeTimedSerializer
 user_bp = Blueprint("user", __name__)
 
 @user_bp.route("/register", methods=["GET", "POST"])
@@ -38,9 +38,11 @@ def login():
         return jsonify({"success": False, "message": "E-mail ou senha incorretos"}), 401
 
     session["user_id"] = user.id
-    print("Sessão criada para user_id:", user.id)
+    s = URLSafeTimedSerializer("chave-super-secreta")
+    cookie_value = s.dumps(dict(session))
+
     return jsonify({
         "success": True,
         "message": "Login realizado com sucesso!",
-        "user": user.to_dict()
-    }), 200
+        "session_cookie": cookie_value
+    })

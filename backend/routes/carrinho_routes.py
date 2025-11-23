@@ -1,18 +1,29 @@
 from dao.carrinhoDAO import CarrinhoDAO
-from flask import Blueprint, jsonify, request, session
+from flask import Blueprint, jsonify, request
+from itsdangerous import URLSafeTimedSerializer
+
+def decode_cookie(cookie_value):
+    s = URLSafeTimedSerializer("chave-super-secreta")
+    data = s.loads(cookie_value)
+    return data
 
 carrinho_bp = Blueprint("carrinho", __name__)
 
 @carrinho_bp.route("/adicionar", methods=["POST"])
 def carrinho_adicionar():
-    print("Sessão atual:", dict(session))
-    usuario_id = session.get("user_id")
-    if not usuario_id:
-        return jsonify({"erro": "Usuário não autenticado"}), 401
+    
 
     data = request.get_json()
     if not data:
         return jsonify({"erro": "Requisição inválida, envie JSON"}), 400
+
+    cookieLogin = data.get("cookieLogin")
+    if not cookieLogin:
+        return jsonify({"erro": "Cookie de autenticação não fornecido"}), 405
+    
+    usuario_id = decode_cookie(cookieLogin).get("user_id")
+    if not usuario_id:
+        return jsonify({"erro": "Usuário não autenticado"}), 403
 
     produto_id = data.get("produto_id")
     quantidade = data.get("quantidade", 1)
