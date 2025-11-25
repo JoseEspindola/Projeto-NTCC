@@ -1,4 +1,6 @@
+
 from dao.carrinhoDAO import CarrinhoDAO
+from dao.produtoDAO import ProdutoDAO
 from flask import Blueprint, jsonify, request
 from itsdangerous import URLSafeTimedSerializer
 
@@ -36,9 +38,37 @@ def carrinho_adicionar():
         produto_id=produto_id,
         quantidade=quantidade
     )
+    ProdutoDAO.diminuir_quantidade(produto_id)
 
     return jsonify({
         "success": True,
         "message": "Produto adicionado ao carrinho!",
         "carrinho": carrinho_atualizado.to_dict()
     }), 201
+
+
+@carrinho_bp.route("/<int:user_id>", methods=["GET"])
+def listar_carrinho(user_id):
+    itens = CarrinhoDAO.listar(user_id)
+    if not itens:
+        return jsonify([])
+    # retorna produto dentro do item
+    return jsonify([item.to_dict() for item in itens]), 200
+
+@carrinho_bp.route("/remover/<int:item_id>", methods=["DELETE"])
+def remover_item(item_id):
+
+    item = CarrinhoDAO.get_by_id(item_id)
+    if not item:
+        return jsonify({"success": False, "message": "Item não encontrado"}), 404
+
+    item_atualizado, msg = CarrinhoDAO.remover_uma_unidade(item_id)
+
+    ProdutoDAO.aumentar_quantidade(item.produto_id)
+
+    resposta = {
+        "success": True,
+        "message": msg,
+        "quantidade_restante": item_atualizado.quantidade if item_atualizado else 0,
+    }
+    return jsonify(resposta), 200

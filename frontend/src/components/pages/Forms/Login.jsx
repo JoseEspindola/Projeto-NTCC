@@ -1,17 +1,13 @@
 import '../../tudo.css';
 import { useCookies } from 'react-cookie';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from "react";
 
 function Login() {
-  const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
-
-  const [infoForm, setInfoForm] = useState({
-    email: '',
-    senha: ''
-  });
-
+  const [cookies, setCookie, removeCookie] = useCookies(['user_id', 'user_info']);
+  const [infoForm, setInfoForm] = useState({ email: '', senha: '' });
   const [mensagem, setMensagem] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,14 +32,21 @@ function Login() {
         }),
       });
 
-
       const dados = await resposta.json();
 
       if (dados.success) {
         alert("Login realizado com sucesso!");
         setMensagem("");
         setInfoForm({ email: '', senha: '' });
+
         setCookie('user_id', dados.session_cookie, { path: '/' });
+        setCookie('user_info', JSON.stringify(dados.user), { path: '/' });
+
+        if (dados.user.is_admin) {
+          navigate('/admin');
+        } else {
+          navigate('/produtos');
+        }
       } else {
         setMensagem(dados.message || "Credenciais inválidas.");
       }
@@ -58,7 +61,7 @@ function Login() {
     <div className="body">
       <h1 className="form-title">Login</h1>
 
-      <form onSubmit={handleSubmit} method = "POST">
+      <form onSubmit={handleSubmit} method="POST">
         <label htmlFor="email">E-mail</label>
         <input
           type="email"
@@ -89,6 +92,7 @@ function Login() {
 
         {mensagem && <p className="erro">{mensagem}</p>}
       </form>
+
       <p>
         Faça login para acessar seu perfil, acompanhar pedidos e apoiar ações solidárias. 
         O acesso é seguro e totalmente gratuito.

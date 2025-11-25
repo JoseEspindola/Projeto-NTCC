@@ -37,6 +37,7 @@ function Masc() {
       if (dados.success) {
         alert(`${produto.nome} adicionado ao carrinho!`);
         setMensagem("");
+        window.location.reload();
       } else {
         setMensagem(dados.message || "Credenciais inválidas.");
       }

@@ -19,6 +19,38 @@ h3 {
     color: #555;
     padding: 20px;
 }
+.admin-dashboard {
+  text-align: center;
+  padding: 40px;
+}
+
+.admin-dashboard h1 {
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.admin-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-menu li {
+  margin: 15px 0;
+}
+
+.admin-menu button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.admin-menu button:hover {
+  background-color: #0056b3;
+}
 
 .carrinho{
     margin-left: 10px;

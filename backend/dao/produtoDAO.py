@@ -12,7 +12,8 @@ class ProdutoDAO:
 
     @staticmethod
     def adicionar(data):
-        produto = Produto(**data)
+        produto = Produto(nome = data['nome'],descricao = data.get('descricao'),
+        preco = data['preco'],quantidade = data.get('quantidade', 1))
         db.session.add(produto)
         db.session.commit()
         return produto
@@ -36,3 +37,20 @@ class ProdutoDAO:
             db.session.commit()
             return True
         return False
+    
+    @staticmethod
+    def diminuir_quantidade(produto_id):
+        produto = Produto.query.get(produto_id)
+        if not produto:
+            return None  
+
+        if produto.quantidade > 0:
+            produto.quantidade -= 1
+            db.session.commit()
+        return produto
+    @staticmethod
+    def aumentar_quantidade(produto_id, qtd=1):
+        produto = Produto.query.get(produto_id)
+        if produto:
+            produto.quantidade += qtd
+            db.session.commit()

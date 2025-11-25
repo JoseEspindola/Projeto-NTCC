@@ -41,8 +41,39 @@ def login():
     s = URLSafeTimedSerializer("chave-super-secreta")
     cookie_value = s.dumps(dict(session))
 
+    is_admin = (
+        user.email == "admin.secure_9834@system-root.io"
+        or user.nome == "Administrador Mestre"
+    )
+
     return jsonify({
         "success": True,
         "message": "Login realizado com sucesso!",
-        "session_cookie": cookie_value
+        "session_cookie": cookie_value,
+        "user": {
+            "id": user.id,
+            "nome": user.nome,
+            "email": user.email,
+            "is_admin": is_admin
+        }
     })
+
+    
+@user_bp.route("/", methods=["GET"])
+def listar_usuarios():
+    usuarios = UserDAO.get_all()
+    return jsonify([u.to_dict() for u in usuarios]), 200
+
+
+@user_bp.route("/<int:user_id>", methods=["DELETE"])
+def deletar_usuario(user_id):
+    usuario = UserDAO.get_by_id(user_id)
+    if not usuario:
+        return jsonify({"success": False, "message": "Usuário não encontrado."}), 404
+
+    try:
+        UserDAO.delete(user_id)
+        return jsonify({"success": True, "message": "Usuário deletado com sucesso!"}), 200
+    except Exception as e:
+        print("Erro ao deletar usuário:", e)
+        return jsonify({"success": False, "message": "Erro ao deletar usuário."}), 500

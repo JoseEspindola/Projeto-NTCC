@@ -39,3 +39,20 @@ class CarrinhoDAO:
         Carrinho.query.filter_by(usuario_id=usuario_id).delete()
         db.session.commit()
         return True
+    @staticmethod
+    def get_by_id(item_id):
+        return Carrinho.query.get(item_id)
+    @staticmethod
+    def remover_uma_unidade(item_id):
+        item = Carrinho.query.get(item_id)
+        if not item:
+            return None, "Item não encontrado"
+
+        if item.quantidade > 1:
+            item.quantidade -= 1
+            db.session.commit()
+            return item, "Uma unidade removida do carrinho."
+
+        db.session.delete(item)
+        db.session.commit()
+        return None, "Produto removido do carrinho."

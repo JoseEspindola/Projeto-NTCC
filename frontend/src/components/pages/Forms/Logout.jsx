@@ -7,6 +7,7 @@ function Logout() {
 
   const realizarLogout = () => {
     removeCookie('user_id', { path: '/' });
+    removeCookie('user_info', { path: '/' });
     alert("Logout realizado com sucesso!");
     navigate('/login');
   };
