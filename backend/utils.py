@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from bancoDados.db_sqlite import db
+from criarAdmin import criarAdmin
 from models.user_model import User
 from models.produto_model import Produto
 from models.carrinho_model import Carrinho
@@ -20,5 +21,5 @@ def criar_app():
 
     with app.app_context():
         db.create_all()
-
+        criarAdmin()
     return app
